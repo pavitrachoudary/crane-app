@@ -11,27 +11,46 @@ function Earnings() {
     description: ""
   });
 
-  // ✅ Replace with your real Render backend URL
   const API = "https://crane-backend-q5xk.onrender.com";
 
   // fetch cranes
   const fetchCranes = async () => {
-    const res = await axios.get(`${API}/api/cranes`);
-    setCranes(res.data);
+    try {
+      const res = await axios.get(`${API}/api/cranes`);
+      setCranes(Array.isArray(res.data) ? res.data : []);
+    } catch (error) {
+      console.log(error);
+      setCranes([]);
+    }
   };
 
   // fetch earnings
   const fetchEarnings = async () => {
-    const res = await axios.get(`${API}/api/earnings`);
-    setEarnings(res.data);
+    try {
+      const res = await axios.get(`${API}/api/earnings`);
+      setEarnings(Array.isArray(res.data) ? res.data : []);
+    } catch (error) {
+      console.log(error);
+      setEarnings([]);
+    }
   };
 
   // add earning
   const addEarning = async () => {
     if (!form.crane) return;
-    await axios.post(`${API}/api/earnings`, form);
-    setForm({ crane: "", income: "", expenses: "", description: "" });
-    fetchEarnings();
+
+    try {
+      await axios.post(`${API}/api/earnings`, form);
+      setForm({
+        crane: "",
+        income: "",
+        expenses: "",
+        description: ""
+      });
+      fetchEarnings();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -49,6 +68,7 @@ function Earnings() {
 
         {/* Form */}
         <div className="grid grid-cols-2 gap-3 mb-6">
+
           <select
             className="border p-2 rounded"
             value={form.crane}
@@ -57,11 +77,13 @@ function Earnings() {
             }
           >
             <option value="">Select Crane</option>
-            {cranes.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.craneNumber}
-              </option>
-            ))}
+
+            {Array.isArray(cranes) &&
+              cranes.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.craneNumber}
+                </option>
+              ))}
           </select>
 
           <input
@@ -101,19 +123,29 @@ function Earnings() {
 
         {/* List */}
         <div className="mt-6 space-y-3">
-          {earnings.map((e) => (
-            <div key={e._id} className="p-4 bg-gray-100 rounded-lg shadow">
-              <p className="font-semibold">
-                🚜 {e.crane?.craneNumber}
-              </p>
-              <p>💰 Income: ₹ {e.income}</p>
-              <p>💸 Expenses: ₹ {e.expenses}</p>
-              <p className="font-bold text-green-600">
-                📈 Profit: ₹ {e.income - e.expenses}
-              </p>
-              <p className="text-sm text-gray-600">{e.description}</p>
-            </div>
-          ))}
+
+          {Array.isArray(earnings) &&
+            earnings.map((e) => (
+              <div
+                key={e._id}
+                className="p-4 bg-gray-100 rounded-lg shadow"
+              >
+                <p className="font-semibold">
+                  🚜 {e.crane?.craneNumber}
+                </p>
+
+                <p>💰 Income: ₹ {e.income}</p>
+                <p>💸 Expenses: ₹ {e.expenses}</p>
+
+                <p className="font-bold text-green-600">
+                  📈 Profit: ₹ {e.income - e.expenses}
+                </p>
+
+                <p className="text-sm text-gray-600">
+                  {e.description}
+                </p>
+              </div>
+            ))}
         </div>
 
       </div>
