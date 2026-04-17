@@ -11,22 +11,25 @@ function Earnings() {
     description: ""
   });
 
+  // ✅ Replace with your real Render backend URL
+  const API = "https://crane-backend-q5xk.onrender.com";
+
   // fetch cranes
   const fetchCranes = async () => {
-    const res = await axios.get("http://localhost:5000/api/cranes");
+    const res = await axios.get(`${API}/api/cranes`);
     setCranes(res.data);
   };
 
   // fetch earnings
   const fetchEarnings = async () => {
-    const res = await axios.get("http://localhost:5000/api/earnings");
+    const res = await axios.get(`${API}/api/earnings`);
     setEarnings(res.data);
   };
 
   // add earning
   const addEarning = async () => {
     if (!form.crane) return;
-    await axios.post("http://localhost:5000/api/earnings", form);
+    await axios.post(`${API}/api/earnings`, form);
     setForm({ crane: "", income: "", expenses: "", description: "" });
     fetchEarnings();
   };

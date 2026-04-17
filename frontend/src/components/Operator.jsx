@@ -11,22 +11,25 @@ function Operator() {
     assignedCrane: ""
   });
 
+  // ✅ Replace with your real Render backend URL
+  const API = "https://crane-backend-q5xk.onrender.com";
+
   // fetch cranes
   const fetchCranes = async () => {
-    const res = await axios.get("http://localhost:5000/api/cranes");
+    const res = await axios.get(`${API}/api/cranes`);
     setCranes(res.data);
   };
 
   // fetch operators
   const fetchOperators = async () => {
-    const res = await axios.get("http://localhost:5000/api/operators");
+    const res = await axios.get(`${API}/api/operators`);
     setOperators(res.data);
   };
 
   // add operator
   const addOperator = async () => {
     if (!form.name) return;
-    await axios.post("http://localhost:5000/api/operators", form);
+    await axios.post(`${API}/api/operators`, form);
     setForm({ name: "", phone: "", salary: "", assignedCrane: "" });
     fetchOperators();
   };

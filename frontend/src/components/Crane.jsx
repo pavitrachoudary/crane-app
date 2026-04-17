@@ -7,14 +7,14 @@ function Crane() {
 
   // fetch cranes
   const fetchCranes = async () => {
-    const res = await axios.get("http://localhost:5000/api/cranes");
+    const res = await axios.get("https://crane-backend-q5xk.onrender.com/");
     setCranes(res.data);
   };
 
   // add crane
   const addCrane = async () => {
     if (!form.craneNumber) return;
-    await axios.post("http://localhost:5000/api/cranes", form);
+    await axios.post("https://crane-backend-q5xk.onrender.com/", form);
     setForm({ craneNumber: "", model: "" });
     fetchCranes();
   };
